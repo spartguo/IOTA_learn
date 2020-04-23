@@ -16,7 +16,7 @@ public class helloWorld {
         System.out.println("-----------连接节点---------");
         IotaAPI api = new IotaAPI.Builder()
                 .protocol("https")
-                .host("nodes.devnet.thetangle.org")
+                .host("nodes.comnet.thetangle.org")
                 .port(443)
                 .build();
 
@@ -28,7 +28,8 @@ public class helloWorld {
 
         //设置节点信息
         int depth = 3;
-        int minimumWeightMagnitude = 9;
+        //人家每次读说至少要是10，我也不太懂
+        int minimumWeightMagnitude = 10;
 
         //想要发送的账户地址
         String address = "ZLGVEQ9JUZZWCZXLWVNTHBDX9G9KZTJP9VEERIIFHY9SIQKYBVAHIMLHXPQVE9IXFDDXNHQINXJDRPFDXNYVAPLZAW";
