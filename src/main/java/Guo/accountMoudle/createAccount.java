@@ -1,4 +1,4 @@
-package Guo;
+package Guo.accountMoudle;
 
 import org.iota.jota.IotaAPI;
 import org.iota.jota.IotaAccount;
@@ -24,14 +24,17 @@ public class createAccount {
 
         // Call the `getNodeInfo()` method for information about the node and the Tangle
         GetNodeInfoResponse response = api.getNodeInfo();
+        System.out.println("---------输出节点信息-------");
         System.out.println(response);
 
         //创建文件存储账号（种子）信息状态
-        File file = new File("seed-state-database.json");
+        File file = new File("F://iota_seed_info//seed-state-database.json");
 
         AccountStore store = new AccountFileStore(file);
 
         String mySeed = "TZXHPFAKIIAYOWDVWUNAJOHYSOIDPBVUVWZPVTLPXWEUQPZIRPCESAXMSJZK999F9MTOWBIYJFFE9XCPO";
+
+        System.out.println("---------创建账户-------");
 
         IotaAccount account = new IotaAccount.Builder(mySeed)
                 // Connect to a node
@@ -44,15 +47,15 @@ public class createAccount {
                 .securityLevel(2)
                 .build();
 
-
-
+        System.out.println("---------启动账户-------");
         account.start();
 
         long balance = account.availableBalance();
 
-        System.out.print("Your balance is: " + Math.toIntExact(balance));
+        System.out.println("Your balance is: " + Math.toIntExact(balance));
 
         account.shutdown();
+        System.out.println("---------关闭账户-------");
     }
 
 }
