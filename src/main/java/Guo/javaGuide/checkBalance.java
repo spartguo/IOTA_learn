@@ -1,6 +1,7 @@
 package Guo.javaGuide;
 
 import org.iota.jota.IotaAPI;
+import org.iota.jota.builder.AddressRequest;
 import org.iota.jota.error.ArgumentException;
 
 import java.util.ArrayList;
@@ -15,6 +16,12 @@ public class checkBalance {
                 .host("nodes.comnet.thetangle.org")
                 .port(443)
                 .build();
+
+//        IotaAPI api = new IotaAPI.Builder()
+//                .protocol("http")
+//                .host("134.175.210.190")
+//                .port(14256)
+//                .build();
 
 
         List<String> addresses = new ArrayList<String>();

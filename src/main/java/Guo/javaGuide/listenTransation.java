@@ -12,8 +12,9 @@ public class listenTransation {
         ZMQ.Socket socket = context.socket(ZMQ.SUB);
 
         System.out.println("-----------连接节点ZMQ---------");
-        //开始连接
-        socket.connect("tcp://zmq.nodes.comnet.thetangle.org:5556");
+        //开始连接默认（tcp://zmq.devnet.iota.org:5556）
+//        socket.connect("tcp://134.175.210.190:5556");
+        socket.connect("tcp://zmq.devnet.iota.org:5556");
 
         System.out.println("-----------添加订阅---------");
         //全部transation

@@ -12,9 +12,10 @@ public class ConnectToNode {
     public  static void main(String []args) throws ArgumentException {
         // Create a new instance of the API object
         // and specify which node to connect to
+        //默认（nodes.comnet.thetangle.org）
         IotaAPI api = new IotaAPI.Builder()
                 .protocol("https")
-                .host("nodes.comnet.thetangle.org")
+                .host("134.175.210.190")
                 .port(443)
                 .build();
 
