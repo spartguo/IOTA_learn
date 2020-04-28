@@ -1,23 +1,16 @@
-package Guo.DevnetTest;
+package Guo.Common;
 
 import org.iota.jota.IotaAPI;
-import org.iota.jota.IotaAPICommand;
-import org.iota.jota.IotaPoW;
-import org.iota.jota.dto.request.IotaAttachToTangleRequest;
 import org.iota.jota.dto.response.*;
 import org.iota.jota.error.ArgumentException;
 import org.iota.jota.model.Input;
 import org.iota.jota.model.Transaction;
 import org.iota.jota.model.Transfer;
 import org.iota.jota.pow.SpongeFactory;
-import org.iota.jota.utils.InputValidator;
 import org.iota.jota.utils.StopWatch;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.iota.jota.utils.Constants.INVALID_HASHES_INPUT_ERROR;
-import static org.iota.jota.utils.Constants.INVALID_TRYTES_INPUT_ERROR;
 
 /**
  * 此类主要包含一些测试方法
@@ -29,46 +22,43 @@ public class testTransferTime {
 
 
     /**
-     * 查看单纯的节点选择需要花费多少时间
-     * @param sendSeed
-     * @param reciveSeed
-     * @param numOfAddress
+     * 得到连接状态
+     * @param protocol
+     * @param node
+     * @param port
+     * @return
      */
-    public static void testTimeByTipSelection(String sendSeed,String reciveSeed,int numOfAddress){
-        //得到接收token的address
-        List<String> list = generateTestAddress.generateTenAddressOfSeed(reciveSeed,numOfAddress);
-        System.out.println("-----------开始TipSelection时间测试---------");
+    public static IotaAPI getApi(String protocol,String node,int port){
         System.out.println("-----------连接节点---------");
-
         IotaAPI api = new IotaAPI.Builder()
-                .protocol("https")
-                .host("nodes.comnet.thetangle.org")
-                .port(443)
+                .protocol(protocol)
+                .host(node)
+                .port(port)
                 .build();
+        return api;
+    }
 
-        int depth = 3;
-        int minimumWeightMagnitude = 10;
-        int securityLevel = 2;
+    /**
+     * 查看单纯的节点选择需要花费多少时间
+     * tip选择和address无关
+     */
+    public static void testTimeByTipSelection(String protocol,String node,int port){
 
-        //为了方便，我们每次就传一个
-        int value = 1;
 
-        //设置一个交易集
-        ArrayList<Transfer> transfers = new ArrayList<Transfer>();
+        System.out.println("-----------开始TipSelection时间测试---------");
 
-        //把东西搞好
-        for (int i = 0;i < list.size();i++){
-            Transfer Transaction = new Transfer(list.get(i), value);
-            transfers.add(Transaction);
-        }
+        IotaAPI api = getApi(protocol,node,port);
+
 
         System.out.println("-----------开始测试tipSelection时间---------");
         try {
+            //测试100组数据
+            for (int i = 0;i< 100;i++) {
+                //进行api.gettips
+                GetTipsResponse getTipsResponse = api.getTips();
 
-            //进行api.gettips
-            GetTipsResponse getTipsResponse = api.getTips();
-
-            System.out.println("Doing Tip Selection costs " +  getTipsResponse.getDuration() + "ms");
+                System.out.println("Doing Tip Selection costs " + getTipsResponse.getDuration() + " ms");
+            }
         } catch (ArgumentException e) {
             // Handle error
             e.printStackTrace();
@@ -86,17 +76,12 @@ public class testTransferTime {
      * @param reciveSeed
      * @param numOfAddress
      */
-    public static void testTimeByTransfer(String sendSeed,String reciveSeed,int numOfAddress){
+    public static void testTimeByTransfer(String protocol,String node,int port,String sendSeed,String reciveSeed,int numOfAddress){
+
         //得到接收token的address
-        List<String> list = generateTestAddress.generateTenAddressOfSeed(reciveSeed,numOfAddress);
+        List<String> list = generateTestAddress.generateNumsOfAddressOfSeed(protocol,node,port,reciveSeed,numOfAddress);
 
-        System.out.println("-----------连接节点---------");
-
-        IotaAPI api = new IotaAPI.Builder()
-                .protocol("https")
-                .host("nodes.comnet.thetangle.org")
-                .port(443)
-                .build();
+        IotaAPI api = getApi(protocol,node,port);
 
 
         //为了方便，我们每次就传一个
@@ -134,7 +119,7 @@ public class testTransferTime {
     }
 
     /**
-     * 将IotaAPI中的方法提取出来
+     * 将IotaAPI中的方法提取出来,方便我自己加东西
      * @param api
      * @param seed
      * @param security

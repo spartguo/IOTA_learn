@@ -32,7 +32,7 @@ public class createAccount {
 
         AccountStore store = new AccountFileStore(file);
 
-        String mySeed = "TZXHPFAKIIAYOWDVWUNAJOHYSOIDPBVUVWZPVTLPXWEUQPZIRPCESAXMSJZK999F9MTOWBIYJFFE9XCPO";
+        String mySeed = "XFLBBFEPENMGVQKSZHLGUZRVDIMBVQHMMHPOIKJBBDKRHPPNVHSFTGGPLQTNKUJ9QBUULTECXYDWNXYBW";
 
         System.out.println("---------创建账户-------");
 

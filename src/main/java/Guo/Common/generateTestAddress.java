@@ -1,4 +1,4 @@
-package Guo.DevnetTest;
+package Guo.Common;
 
 import org.iota.jota.IotaAPI;
 import org.iota.jota.builder.AddressRequest;
@@ -21,14 +21,14 @@ public class generateTestAddress {
      * @param seed
      * @param n
      */
-    public static List<String> generateTenAddressOfSeed(String seed,int n){
+    public static List<String> generateNumsOfAddressOfSeed(String protocol,String node,int port,String seed,int n){
         System.out.println("-----------连接节点---------");
 
         //https://comnet.thetangle.org/也是
         IotaAPI api = new IotaAPI.Builder()
-                .protocol("https")
-                .host("nodes.comnet.thetangle.org")
-                .port(443)
+                .protocol(protocol)
+                .host(node)
+                .port(port)
                 .build();
 
         int securityLevel = 2;
