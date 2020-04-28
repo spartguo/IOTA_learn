@@ -19,7 +19,7 @@ public class generateAddress {
         int securityLevel = 2;
 
         //输入seed，人家通过seed来生成address
-        String mySeed = "XFLBBFEPENMGVQKSZHLGUZRVDIMBVQHMMHPOIKJBBDKRHPPNVHSFTGGPLQTNKUJ9QBUULTECXYDWNXYBW";
+        String mySeed = "XHSY9DGBABQUZWGX9XNUXVWTBBYZRJFSOXXRIXYRPRMPKXDTKMGMJSUX9SWRJTWWZNWAYSILLRXGFUJW9";
 
         System.out.println("----------开始生成新的地址----------");
         try {

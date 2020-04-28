@@ -1,11 +1,16 @@
 package Guo.javaGuide;
 
 import org.iota.jota.IotaAPI;
+import org.iota.jota.dto.response.FindTransactionResponse;
 import org.iota.jota.dto.response.SendTransferResponse;
 import org.iota.jota.error.ArgumentException;
+import org.iota.jota.model.Input;
+import org.iota.jota.model.Transaction;
 import org.iota.jota.model.Transfer;
+import org.iota.jota.utils.StopWatch;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class transferTestToken {
     public static void main(String []args){
@@ -21,11 +26,11 @@ public class transferTestToken {
         int minimumWeightMagnitude = 10;
         int securityLevel = 2;
 
-        //有钱的地址的seed，人家会通过seed来看你哪个地址有钱,这个是测试seed1
-        String mySeed = "XHSY9DGBABQUZWGX9XNUXVWTBBYZRJFSOXXRIXYRPRMPKXDTKMGMJSUX9SWRJTWWZNWAYSILLRXGFUJW9";
+        //有钱的地址的seed，人家会通过seed来看你哪个地址有钱,这个是测试seed2
+        String mySeed = "XFLBBFEPENMGVQKSZHLGUZRVDIMBVQHMMHPOIKJBBDKRHPPNVHSFTGGPLQTNKUJ9QBUULTECXYDWNXYBW";
 
-        //要发送的地址，这里是seed2生成的地址
-        String address = "UNVHADHYCFU9YFGFQOLFCXNTQVVLIKQYXRLLBELZSAYCOCVKHOBDOUWSJ9GEYRRRORVJM9RYXANAQLLX9A9GRAJEPZ";
+        //要发送的地址，这里是seed1生成的地址
+        String address = "XDXGVYS9YCRPMTEAPYFLJVPSMQSSULWQYCKDMNXMGTOIQKIFQHAS9IXQQIUGOWRBOSFNM9LOSXSBYXXBANYMOTNUIY";
 
         int value = 1;
 
@@ -50,4 +55,5 @@ public class transferTestToken {
         System.out.println("-----------交易完成---------");
 
     }
+
 }
