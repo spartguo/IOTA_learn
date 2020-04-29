@@ -76,7 +76,7 @@ public class testTransferTime {
      * @param reciveSeed
      * @param numOfAddress
      */
-    public static void testTimeByTransfer(String protocol,String node,int port,String sendSeed,String reciveSeed,int numOfAddress){
+    public static void testTimeByTransfer(String protocol,String node,int port,String sendSeed,String reciveSeed,int numOfAddress,List<Input> inputs){
 
         //得到接收token的address
         List<String> list = generateTestAddress.generateNumsOfAddressOfSeed(protocol,node,port,reciveSeed,numOfAddress);
@@ -103,11 +103,10 @@ public class testTransferTime {
         System.out.println("-----------开始交易---------");
 
         try {
-            System.out.println("------Sending 1 i to every address!-------");
-
+            System.out.println("------Sending 1 i to a address!-------");
 
             //这个sendTransfer负责的很多tip selection / remote proof of work / and sending the bundle to the node
-            SendTransferResponse response = testTransferTime.mySendTransfer(api,sendSeed, securityLevel, depth, minimumWeightMagnitude, transfers, null, null, false, false, null);
+            SendTransferResponse response = testTransferTime.mySendTransfer(api,sendSeed, securityLevel, depth, minimumWeightMagnitude, transfers, inputs, null, false, false, null);
             System.out.println(response.getTransactions());
             System.out.println("all process cost " + response.getDuration() + "ms");
         } catch (ArgumentException e) {
@@ -167,12 +166,18 @@ public class testTransferTime {
     }
 
     public static List<Transaction> mySendTrytes(IotaAPI api,String[] trytes, int depth, int minWeightMagnitude, String reference) throws ArgumentException {
+        long t1 = System.currentTimeMillis();
         GetTransactionsToApproveResponse txs = api.getTransactionsToApprove(depth, reference);
-        System.out.println("Getting trunk/branch transation(TipSelection) and approve tip costs "+ txs.getDuration() + "ms");
+        long t2 = System.currentTimeMillis();
+        System.out.println("duration = "+ txs.getDuration() + "ms");
+        System.out.println("Getting trunk/branch transation(TipSelection) and approve tip costs "+ (t2-t1) + " ms");
 
         // attach to tangle - do pow
+        t1 = System.currentTimeMillis();
         GetAttachToTangleResponse res = api.attachToTangle(txs.getTrunkTransaction(), txs.getBranchTransaction(), minWeightMagnitude, trytes);
-        System.out.println("remote Pow costs " + res.getDuration() +"ms");
+        t2 = System.currentTimeMillis();
+        System.out.println("duration " + res.getDuration() +" ms");
+        System.out.println("remote Pow costs " + (t2-t1) +" ms");
 
         try {
             api.storeAndBroadcast(res.getTrytes());
