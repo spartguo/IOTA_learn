@@ -30,8 +30,8 @@ public class generateTestAddress {
                 .host(node)
                 .port(port)
                 .build();
-
-        int securityLevel = 2;
+        //privete Tangle use 1
+        int securityLevel = 1;
 
         String mySeed = seed;
 

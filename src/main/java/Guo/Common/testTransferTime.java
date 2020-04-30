@@ -1,6 +1,8 @@
 package Guo.Common;
 
 import org.iota.jota.IotaAPI;
+import org.iota.jota.IotaPoW;
+import org.iota.jota.builder.ApiBuilder;
 import org.iota.jota.dto.response.*;
 import org.iota.jota.error.ArgumentException;
 import org.iota.jota.model.Input;
@@ -38,6 +40,18 @@ public class testTransferTime {
         return api;
     }
 
+
+    public static void getBalanceOfSeed(String seed,String protocol,String node,int port){
+
+        System.out.println("-----------开始连接节点---------");
+        IotaAPI api = getApi(protocol,node,port);
+
+        String address = generateTestAddress.generateNumsOfAddressOfSeed(protocol,node,port,seed,1).get(0);
+
+        System.out.println("值为 " + api.getBalance(0,address) + " token");
+    }
+
+
     /**
      * 查看单纯的节点选择需要花费多少时间
      * tip选择和address无关
@@ -67,9 +81,58 @@ public class testTransferTime {
         System.out.println("-----------TipSelection测试结束---------");
     }
 
-
     /**
      *
+     * @param protocol
+     * @param node
+     * @param port
+     * @param sendSeed
+     * @param reciveSeed
+     * @param numOfAddress
+     */
+    public static void testTimeByTransferNoInput(String protocol,String node,int port,String sendSeed,String reciveSeed,int numOfAddress){
+
+        //得到接收token的address
+        List<String> list = generateTestAddress.generateNumsOfAddressOfSeed(protocol,node,port,reciveSeed,numOfAddress);
+
+        IotaAPI api = getApi(protocol,node,port);
+
+
+        //为了方便，我们每次就传一个
+        int value = 0;
+
+        int depth = 3;
+        int minimumWeightMagnitude =9;
+        int securityLevel = 2;
+
+        //设置一个交易集
+        ArrayList<Transfer> transfers = new ArrayList<Transfer>();
+
+        //把东西搞好
+        for (int i = 0;i < list.size();i++){
+            Transfer Transaction = new Transfer(list.get(i), value);
+            transfers.add(Transaction);
+        }
+
+        System.out.println("-----------开始交易---------");
+
+        try {
+            System.out.println("------Sending 1 i to a address!-------");
+
+            //这个sendTransfer负责的很多tip selection / remote proof of work / and sending the bundle to the node
+            SendTransferResponse response = testTransferTime.mySendTransfer(api,sendSeed, securityLevel, depth, minimumWeightMagnitude, transfers, null, null, false, false, null);
+            System.out.println(response.getTransactions());
+            System.out.println("all process cost " + response.getDuration() + "ms");
+        } catch (ArgumentException e) {
+            // Handle error
+            e.printStackTrace();
+        }
+        System.out.println("-----------交易完成---------");
+
+    }
+
+    /**
+     * ---------------------Devnet用---------------------
      * 根据一个bundle中address的个数不同来看看pow，valid，tip selecttion的时间占比
      * sendseed代表发送方，我会先通过官方提供的渠道给这个发送方一定数量的token，然后让他平均发给这些地址
      * @param sendSeed
@@ -85,11 +148,11 @@ public class testTransferTime {
 
 
         //为了方便，我们每次就传一个
-        int value = 1;
+        int value = 0;
 
         int depth = 3;
-        int minimumWeightMagnitude = 10;
-        int securityLevel = 2;
+        int minimumWeightMagnitude = 9;
+        int securityLevel = 1;
 
         //设置一个交易集
         ArrayList<Transfer> transfers = new ArrayList<Transfer>();
@@ -166,18 +229,18 @@ public class testTransferTime {
     }
 
     public static List<Transaction> mySendTrytes(IotaAPI api,String[] trytes, int depth, int minWeightMagnitude, String reference) throws ArgumentException {
-        long t1 = System.currentTimeMillis();
+        long tt1 = System.currentTimeMillis();
         GetTransactionsToApproveResponse txs = api.getTransactionsToApprove(depth, reference);
-        long t2 = System.currentTimeMillis();
+        long tt2 = System.currentTimeMillis();
         System.out.println("duration = "+ txs.getDuration() + "ms");
-        System.out.println("Getting trunk/branch transation(TipSelection) and approve tip costs "+ (t2-t1) + " ms");
+        System.out.println("Getting trunk/branch transation(TipSelection) and approve tip costs "+ (tt2-tt1) + " ms");
 
         // attach to tangle - do pow
-        t1 = System.currentTimeMillis();
-        GetAttachToTangleResponse res = api.attachToTangle(txs.getTrunkTransaction(), txs.getBranchTransaction(), minWeightMagnitude, trytes);
-        t2 = System.currentTimeMillis();
+        tt1 = System.currentTimeMillis();
+        GetAttachToTangleResponse res = api.attachToTangle(txs.getTrunkTransaction(), txs.getBranchTransaction(),minWeightMagnitude , trytes);
+        tt2 = System.currentTimeMillis();
         System.out.println("duration " + res.getDuration() +" ms");
-        System.out.println("remote Pow costs " + (t2-t1) +" ms");
+        System.out.println("remote Pow costs " + (tt2-tt1) +" ms");
 
         try {
             api.storeAndBroadcast(res.getTrytes());
