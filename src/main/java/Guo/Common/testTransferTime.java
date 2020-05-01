@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 此类主要包含一些测试方法
+ * 此类主要包含一些测试的方法
  */
 public class testTransferTime {
     public static void main(String []args){
@@ -41,6 +41,13 @@ public class testTransferTime {
     }
 
 
+    /**
+     * 得到一个seed的含有的token数量
+     * @param seed
+     * @param protocol
+     * @param node
+     * @param port
+     */
     public static void getBalanceOfSeed(String seed,String protocol,String node,int port){
 
         System.out.println("-----------开始连接节点---------");
@@ -53,8 +60,13 @@ public class testTransferTime {
 
 
     /**
+     * ---------此处调用的TipSelectionAPI---------
      * 查看单纯的节点选择需要花费多少时间
      * tip选择和address无关
+     *
+     * @param protocol
+     * @param node
+     * @param port
      */
     public static void testTimeByTipSelection(String protocol,String node,int port){
 
@@ -82,7 +94,9 @@ public class testTransferTime {
     }
 
     /**
-     *
+     *--------测试单个交易执行时间------不需要输入发送address的版本------
+     *本方法主要是测试单个交易测试时间
+     * 输入：连接的节点信息、要发送是seed，要接受的seed，bundle中交易的数量
      * @param protocol
      * @param node
      * @param port
@@ -132,7 +146,10 @@ public class testTransferTime {
     }
 
     /**
-     * ---------------------Devnet用---------------------
+     *--------测试单个交易执行时间-------
+     *本方法主要是测试单个交易测试时间
+     * 输入：连接的节点信息、要发送是seed，要接受的seed，bundle中交易的数量、发送放seed的一个有token的地址
+     *
      * 根据一个bundle中address的个数不同来看看pow，valid，tip selecttion的时间占比
      * sendseed代表发送方，我会先通过官方提供的渠道给这个发送方一定数量的token，然后让他平均发给这些地址
      * @param sendSeed
@@ -181,7 +198,7 @@ public class testTransferTime {
     }
 
     /**
-     * 将IotaAPI中的方法提取出来,方便我自己加东西
+     * 将IotaAPI中的进行单次交易的方法提取出来,方便我自己加东西
      * @param api
      * @param seed
      * @param security
@@ -228,6 +245,16 @@ public class testTransferTime {
         return SendTransferResponse.create(trxs, successful, stopWatch.getElapsedTimeMili());
     }
 
+    /**
+     * 将得到的trytes进行getTipSelection操作，Pow，然后获得交易成功的bundle内容
+     * @param api
+     * @param trytes
+     * @param depth
+     * @param minWeightMagnitude
+     * @param reference
+     * @return
+     * @throws ArgumentException
+     */
     public static List<Transaction> mySendTrytes(IotaAPI api,String[] trytes, int depth, int minWeightMagnitude, String reference) throws ArgumentException {
         long tt1 = System.currentTimeMillis();
         GetTransactionsToApproveResponse txs = api.getTransactionsToApprove(depth, reference);
@@ -243,13 +270,16 @@ public class testTransferTime {
         System.out.println("remote Pow costs " + (tt2-tt1) +" ms");
 
         try {
+            //将得到的trytes发送节点
             api.storeAndBroadcast(res.getTrytes());
         } catch (ArgumentException e) {
             return new ArrayList<>();
         }
 
+        //设置一个list用来放一个bundle中的交易
         final List<Transaction> trx = new ArrayList<>();
 
+        //加入bundle中的交易
         for (String tryte : res.getTrytes()) {
             trx.add(new Transaction(tryte, SpongeFactory.create(SpongeFactory.Mode.CURL_P81)));
         }

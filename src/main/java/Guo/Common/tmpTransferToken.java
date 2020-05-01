@@ -10,6 +10,17 @@ import java.util.ArrayList;
 public class tmpTransferToken {
     public static void main(String []args){}
 
+    /**
+     * 发送零值交易，不输出测试时间
+     *
+     * 提示：此方法不输出进行tipselection、pow等的时间，调用的是api中的transfer方法
+     *
+     * @param protocol
+     * @param node
+     * @param port
+     * @param sendSeed
+     * @param reciveAddress
+     */
     public static void tmpTransferTokenZeroValue(String protocol,String node,int port,String sendSeed,String reciveAddress){
         System.out.println("-----------连接节点---------");
 
@@ -53,6 +64,15 @@ public class tmpTransferToken {
         System.out.println("-----------交易完成---------");
     }
 
+    /**
+     *
+     * @param protocol
+     * @param node
+     * @param port
+     * @param sendSeed
+     * @param reciveAddress
+     * @param numsOfToken
+     */
     public static void tmpTransferTokenByAmount(String protocol,String node,int port,String sendSeed,String reciveAddress,int numsOfToken){
         System.out.println("-----------连接节点---------");
 
