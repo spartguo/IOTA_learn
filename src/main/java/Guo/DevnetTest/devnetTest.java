@@ -6,14 +6,36 @@ import org.iota.jota.IotaAPI;
 import org.iota.jota.dto.response.GetTransactionsToApproveResponse;
 import org.iota.jota.model.Input;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class devnetTest {
-    public static void main(String []args){
+    public static void main(String []args) throws IOException {
 //        for (int i = 0;i < 10;i++)
-//            testMainTime(100);
-        testTipSelect(1);
+////            testMainTime(100);
+        File f=new File("d:\\Users\\user\\Desktop\\Comout.txt");
+        f.createNewFile();
+        FileOutputStream fileOutputStream = new FileOutputStream(f);
+        PrintStream printStream = new PrintStream(fileOutputStream);
+        System.setOut(printStream);
+        for(int i = 5; i < 15 ; i ++ ){
+            for (int j = 0;j < 15 ;j ++) {
+                try {
+                    System.out.println("dept : " + i);
+                    testTipSelect(i);
+                }catch (Exception e){
+                    System.out.println("----------illegalstateexception--------");
+                }
+
+            }
+        }
+
     }
 
 
@@ -22,7 +44,7 @@ public class devnetTest {
      */
     public static void testTipSelect(int dept){
         String protocol = "https";
-        String node = "nodes.iota.cafe";
+        String node = "nodes.comnet.thetangle.org";
         int port = 443;
 
 //        testTransferTime.testTimeByTipSelection(protocol,node,port);
